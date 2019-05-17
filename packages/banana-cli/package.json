@@ -1,0 +1,17 @@
+{
+  "name": "@banana/cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "zengfr",
+  "license": "MIT",
+  "private": true,
+  "bin": {
+    "banana": "bin/banana"
+  },
+  "scripts": {
+    "start": "node ./bin/banana init",
+    "build": "rollup -c rollup.config.js"
+  },
+  "dependencies": {
+  }
+}

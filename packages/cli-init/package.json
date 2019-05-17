@@ -1,0 +1,8 @@
+{
+  "name": "@banana/init",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "zengfr",
+  "license": "MIT",
+  "private": true
+}
