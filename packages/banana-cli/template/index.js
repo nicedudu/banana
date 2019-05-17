@@ -7,8 +7,15 @@ const resolveTpl = project => {
 };
 
 class Template {
-  writeTpl(template, source, data, dest) {
-    this.fs.copyTpl(path.join(__dirname, template, source), dest, data, data);
+  writeTpl(template, source, dest, data) {
+    if (!data) data = this;
+    console.log(data);
+    this.fs.copyTpl(path.join(__dirname, template, source), dest, data);
+  }
+
+  copy(template, source, dest) {
+    source = template ? path.join(__dirname, template, source) : path.join(__dirname, source);
+    this.fs.copy(source, dest);
   }
 }
 
