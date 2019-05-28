@@ -13,6 +13,7 @@ class TplResolve extends Template {
     this.template = project.template;
     this.projectPath = path.join(project.dir, this.name);
     this.sourceDir = path.join(this.projectPath, 'src');
+    this.pageDir = path.join(this.sourceDir, 'pages');
     this.configDir = path.join(this.projectPath, 'config');
     this.publicDir = path.join(this.sourceDir, 'public');
     this.description = project.description;
@@ -29,36 +30,52 @@ class TplResolve extends Template {
   resolve() {
     fs.ensureDirSync(this.projectPath);
     fs.ensureDirSync(this.sourceDir);
+    fs.ensureDirSync(this.pageDir);
     fs.ensureDirSync(this.configDir);
     fs.ensureDirSync(this.publicDir);
     this.copy(null, 'logo.svg', path.join(this.publicDir, 'logo.svg'));
-    this.writeTpl(this.template, 'indexhtml', path.join(this.sourceDir, 'index.html'), {
+    this.writeTpl(this.template, 'indexhtml', path.join(this.pageDir, 'index', 'index.html'), {
       name: this.name,
       version: this.version,
       title: '🍌 Banana-cli'
     });
-    this.writeTpl(this.template, 'scss', path.join(this.publicDir, `style.${this.styleExt}`));
+    this.writeTpl(this.template, 'scss', path.join(this.pageDir, 'index', `index.${this.styleExt}`));
     if (this.typescript) this.writeTpl(this.template, 'tsconfig', path.join(this.projectPath, 'tsconfig.json'));
-    this.writeTpl(this.template, 'indexjs', path.join(this.sourceDir, `index.${this.typescript ? 'ts' : 'js'}`));
+    this.writeTpl(
+      this.template,
+      'indexjs',
+      path.join(this.pageDir, 'index', `index.${this.typescript ? 'ts' : 'js'}`),
+      {
+        styleExt: this.styleExt
+      }
+    );
     this.writeTpl(this.template, 'pkg', path.join(this.projectPath, 'package.json'), {
       name: this.name,
-      description: this.description
+      description: this.description,
+      typescript: this.typescript
     });
     this.writeTpl(this.template, 'gitignore', path.join(this.projectPath, '.gitignore'));
     this.writeTpl(this.template, 'eslintrc', path.join(this.projectPath, '.eslintrc'));
     this.writeTpl(this.template, 'eslintignore', path.join(this.projectPath, '.eslintignore'));
-    this.writeTpl(this.template, 'babelrc', path.join(this.projectPath, '.babelrc'));
+    this.writeTpl(this.template, 'babelrc', path.join(this.projectPath, '.babelrc'), {
+      typescript: this.typescript
+    });
     this.writeTpl(this.template, 'editorconfig', path.join(this.projectPath, '.editorconfig'));
     this.writeTpl(this.template, 'readme', path.join(this.projectPath, 'README.md'));
+    this.writeTpl(this.template, 'webpackbase', path.join(this.projectPath, 'webpack.base.js'), {
+      typescript: this.typescript
+    });
+    this.writeTpl(this.template, 'webpackdev', path.join(this.projectPath, 'webpack.dev.js'));
+    this.writeTpl(this.template, 'webpackprod', path.join(this.projectPath, 'webpack.prod.js'));
     this.fs.commit(() => this.commit());
   }
 
   commit() {
     console.log();
-    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/index.html`)}`);
-    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/public/style.${this.styleExt}`)}`);
+    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index.html`)}`);
+    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index.${this.styleExt}`)}`);
     console.log(
-      `${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/index.${this.typescript ? 'ts' : 'js'}`)}`
+      `${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index.${this.typescript ? 'ts' : 'js'}`)}`
     );
     if (this.typescript) console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/tsconfig.json`)}`);
     console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/package.json`)}`);
@@ -68,6 +85,9 @@ class TplResolve extends Template {
     console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/.babelrc`)}`);
     console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/.editorconfig`)}`);
     console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/README.md`)}`);
+    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/webpack.base.js`)}`);
+    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/webpack.dev.js`)}`);
+    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/webpack.prod.js`)}`);
   }
 }
 
