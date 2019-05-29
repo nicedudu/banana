@@ -52,7 +52,8 @@ class TplResolve extends Template {
     this.writeTpl(this.template, 'pkg', path.join(this.projectPath, 'package.json'), {
       name: this.name,
       description: this.description,
-      typescript: this.typescript
+      typescript: this.typescript,
+      style: this.styleExt
     });
     this.writeTpl(this.template, 'gitignore', path.join(this.projectPath, '.gitignore'));
     this.writeTpl(this.template, 'eslintrc', path.join(this.projectPath, '.eslintrc'));
@@ -63,7 +64,8 @@ class TplResolve extends Template {
     this.writeTpl(this.template, 'editorconfig', path.join(this.projectPath, '.editorconfig'));
     this.writeTpl(this.template, 'readme', path.join(this.projectPath, 'README.md'));
     this.writeTpl(this.template, 'webpackbase', path.join(this.projectPath, 'webpack.base.js'), {
-      typescript: this.typescript
+      typescript: this.typescript,
+      style: this.styleExt
     });
     this.writeTpl(this.template, 'webpackdev', path.join(this.projectPath, 'webpack.dev.js'));
     this.writeTpl(this.template, 'webpackprod', path.join(this.projectPath, 'webpack.prod.js'));

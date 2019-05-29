@@ -16,7 +16,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(sa|sc|c)ss$/,
+        test: /\.(<% if (style === 'scss') { %>sa|sc|<% } %>c)ss$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
