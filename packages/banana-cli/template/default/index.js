@@ -80,12 +80,14 @@ class TplResolve extends Template {
 
   commit() {
     console.log();
-    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index.html`)}`);
+    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index/index.html`)}`);
     console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/shared/header.html`)}`);
     console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/shared/footer.html`)}`);
-    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index.${this.styleExt}`)}`);
+    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index/index.${this.styleExt}`)}`);
     console.log(
-      `${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index.${this.typescript ? 'ts' : 'js'}`)}`
+      `${chalk.green('✔ ')} ${chalk.grey(
+        `创建文件: ${this.name}/src/pages/index/index.${this.typescript ? 'ts' : 'js'}`
+      )}`
     );
     if (this.typescript) console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/tsconfig.json`)}`);
     console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/package.json`)}`);

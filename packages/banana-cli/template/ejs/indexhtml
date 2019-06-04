@@ -1,0 +1,9 @@
+<%- header %>
+  <div class="app">
+    <header class="app-header">
+      <img src="<%- logo %>" class="app-logo" alt="logo" />
+      <h1 class="title"><%= title %><span><%= version %></span></h1>
+      <a class="app-link" href="https://github.com/nicedudu/banana" target="_blank" rel="lerna banana">Learn Banana</a>
+    </header>
+  </div>
+<%- footer %>

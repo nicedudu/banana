@@ -1,0 +1,122 @@
+const path = require('path');
+const glob = require('glob');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+module.exports = {
+  entry: globEntries('./src/pages/**/index.<%if (typescript) { %>ts<% } else { %>js<% } %>'),
+  output: {
+    filename: 'scripts/[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    chunkFilename: 'scripts/libs/commons.bundle.js'
+  },
+  devtool: 'inline-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.(<% if (style === 'scss') { %>sa|sc|<% } %>c)ss$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: true
+            }
+          },
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              outputPath: 'images',
+              name: '[name].[ext]',
+              useRelativePath: true,
+              limit: 8192
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'fonts',
+              name: '[name].[ext]'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.html$/,
+        use: ['html-loader']
+      },
+      {
+        test: /\.ejs$/,
+        use: [
+          {
+            loader: 'compile-ejs-loader'
+          }
+        ]
+      },
+      {
+        test: /\.(<% if(typescript) { %>ts|<% } %>js)$/,
+        exclude: /(node_modules|bower_components)/,
+        use: ['babel-loader']
+      }
+    ]
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          name: 'commons',
+          chunks: 'initial',
+          minChunks: 2
+        }
+      }
+    }
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: 'styles/[name].style.css'
+    })
+  ]
+};
+
+module.exports.plugins = [...module.exports.plugins, ...globTemplates('./src/pages/**/index.ejs')];
+
+function globEntries(globPath) {
+  const entries = {};
+  glob.sync(globPath).map(entry => {
+    const filename = entry.split('/').splice(-2, 1)[0];
+    entries[filename] = entry;
+  });
+
+  return entries;
+}
+
+function globTemplates(globPath) {
+  const templates = [];
+  glob.sync(globPath).map(tpl => {
+    const filename = tpl.split('/').splice(-2, 1)[0];
+    templates.push(
+      new HtmlWebpackPlugin({
+        title: filename.replace(filename[0], filename[0].toUpperCase()),
+        filename: `${filename}.html`,
+        template: tpl,
+        inject: true,
+        templateParameters: path.extname(tpl) === '.ejs' ? require(`${path.dirname(tpl)}/options.js`) : {},
+        chunks: [filename, 'commons']
+      })
+    );
+  });
+
+  return templates;
+}

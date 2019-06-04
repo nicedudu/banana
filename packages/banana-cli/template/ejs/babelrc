@@ -1,0 +1,10 @@
+{
+  "presets": [
+    "@babel/env"<% if(typescript) { %>,
+    "@babel/typescript"<% } %>
+  ]<% if(typescript) { %>,
+  "plugins": [
+    "@babel/proposal-class-properties",
+    "@babel/proposal-object-rest-spread"
+  ]<% } %>
+}
