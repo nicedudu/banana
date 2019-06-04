@@ -16,6 +16,7 @@ class TplResolve extends Template {
     this.pageDir = path.join(this.sourceDir, 'pages');
     this.configDir = path.join(this.projectPath, 'config');
     this.publicDir = path.join(this.sourceDir, 'public');
+    this.sharedDir = path.join(this.sourceDir, 'shared');
     this.description = project.description;
     this.typescript = project.typescript;
     this.version = project.version;
@@ -33,12 +34,17 @@ class TplResolve extends Template {
     fs.ensureDirSync(this.pageDir);
     fs.ensureDirSync(this.configDir);
     fs.ensureDirSync(this.publicDir);
+    fs.ensureDirSync(this.sharedDir);
     this.copy(null, 'logo.svg', path.join(this.publicDir, 'logo.svg'));
     this.writeTpl(this.template, 'indexhtml', path.join(this.pageDir, 'index', 'index.html'), {
       name: this.name,
       version: this.version,
       title: '🍌 Banana-cli'
     });
+    this.writeTpl(this.template, 'headerhtml', path.join(this.sharedDir, 'header.html'), {
+      name: this.name
+    });
+    this.writeTpl(this.template, 'footerhtml', path.join(this.sharedDir, 'footer.html'));
     this.writeTpl(this.template, 'scss', path.join(this.pageDir, 'index', `index.${this.styleExt}`));
     if (this.typescript) this.writeTpl(this.template, 'tsconfig', path.join(this.projectPath, 'tsconfig.json'));
     this.writeTpl(
@@ -75,6 +81,8 @@ class TplResolve extends Template {
   commit() {
     console.log();
     console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index.html`)}`);
+    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/shared/header.html`)}`);
+    console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/shared/footer.html`)}`);
     console.log(`${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index.${this.styleExt}`)}`);
     console.log(
       `${chalk.green('✔ ')} ${chalk.grey(`创建文件: ${this.name}/src/pages/index.${this.typescript ? 'ts' : 'js'}`)}`
